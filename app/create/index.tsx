@@ -21,7 +21,7 @@ export default function CreateItemScreen() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
 
-  const store = useAssociationStore();
+  const { addItem } = useAssociationStore();
   const router = useRouter();
 
   const descriptionRef = useRef<TextInput>(null);
@@ -32,7 +32,7 @@ export default function CreateItemScreen() {
       return;
     }
     try {
-      store.addItem({ title, description });
+      addItem({ title, description });
       router.back();
     } catch (error) {
       if (error instanceof Error) {
@@ -53,7 +53,7 @@ export default function CreateItemScreen() {
             </ThemedText>
             <ThemedTextInput
               style={styles.input}
-              placeholder="e.g., Belvedere Museum"
+              placeholder="e.g., Shopping Mall Store"
               value={title}
               onChangeText={setTitle}
               autoFocus={true}
@@ -69,7 +69,7 @@ export default function CreateItemScreen() {
             <ThemedTextInput
               ref={descriptionRef}
               style={[styles.textArea, styles.input]}
-              placeholder="e.g., Takes 5 hours to visit..."
+              placeholder="e.g., Has cheap meat!"
               value={description}
               onChangeText={setDescription}
               multiline={true}

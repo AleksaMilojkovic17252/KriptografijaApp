@@ -40,7 +40,6 @@ export const ThemedTextInput = forwardRef<TextInput, ThemedTextInputProps>(
     return (
       <TextInput
         style={inputStyle}
-        placeholder="e.g., Belvedere Museum"
         placeholderTextColor={isDark ? "#636366" : "#8E8E93"}
         {...otherProps}
       />

@@ -83,7 +83,7 @@ export default function ListScreen() {
         />
         <ThemedTextInput
           style={[styles.searchInput]}
-          placeholder="Search museums..."
+          placeholder="Search titles..."
           value={search}
           onChangeText={setSearch}
         />

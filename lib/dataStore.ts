@@ -8,8 +8,9 @@ export interface DataState {
   selectedItem?: DataType;
   loadItems: () => void;
   addItem: (item: DataType) => void;
-  selectItem: (item?: DataType) => void;
-  removeItem: (item: DataType) => void;
+  selectItem: (item: DataType) => void;
+  removeItem: () => void;
+  updateItem: (newItem: DataType) => void;
 }
 
 const escapeData = (text: string) => text.replace(/:/g, "/:");
@@ -71,20 +72,43 @@ export const useAssociationStore = create<DataState>((set, get) => ({
     }));
   },
 
-  removeItem: (item) => {
-    const updatedItems = get().items.filter(
-      (data) => data.title !== item.title
+  removeItem: () => {
+    const selectedItem = get().selectedItem!
+    const items = get().items.filter(
+      (data) => data.title !== selectedItem.title
     );
 
     let newFileContent = "1\n";
-    updatedItems.forEach((it) => {
+    items.forEach((it) => {
       newFileContent += `${escapeData(it.title)} : ${escapeData(
         it.description
       )}\n`;
     });
 
     get().file.write(newFileContent);
-    set({ items: updatedItems });
+    set({ items });
+  },
+
+  updateItem: (newItem) => {
+    if(!newItem.title) throw new Error("Missing title")
+    const selectedItem = get().selectedItem!;
+    const items = get().items;
+    const itemIndex = items.findIndex((item) => item.title == selectedItem.title);
+
+    if (!itemIndex) throw new Error("Item missing from main list");
+
+    const newItems = [...items];
+    newItems[itemIndex] = newItem
+
+    let newFileContent = "1\n";
+    newItems.forEach((item) => {
+      const safeTitle = escapeData(item.title)
+      const safeDescription = escapeData(item.description)
+      newFileContent += `${safeTitle} : ${safeDescription}\n`;
+    });
+
+    get().file.write(newFileContent);
+    set({ items: newItems, selectedItem: newItem });
   },
 
   selectItem: (item) => {

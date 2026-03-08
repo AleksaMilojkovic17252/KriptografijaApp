@@ -1,10 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import {
-  FlatList,
-  Pressable,
-  StyleSheet,
-  useColorScheme
-} from "react-native";
+import { FlatList, Pressable, StyleSheet, useColorScheme } from "react-native";
 
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";

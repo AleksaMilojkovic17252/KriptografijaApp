@@ -13,7 +13,8 @@ export interface DataState {
   updateItem: (newItem: DataType) => void;
 }
 
-const escapeData = (text: string) => text.replace(/:/g, "/:");
+const escapeData = (text: string) =>
+  text.replace(/\n/g, "").replace(/:/g, "/:");
 
 const unescapeData = (text: string) => text.replace(/\/:/g, ":");
 
@@ -44,6 +45,7 @@ export const useAssociationStore = create<DataState>((set, get) => ({
         return null;
       })
       .filter((item): item is DataType => item !== null);
+    console.log("Parsed items:", items);
 
     set({ items });
   },
@@ -73,15 +75,15 @@ export const useAssociationStore = create<DataState>((set, get) => ({
   },
 
   removeItem: () => {
-    const selectedItem = get().selectedItem!
+    const selectedItem = get().selectedItem!;
     const items = get().items.filter(
-      (data) => data.title !== selectedItem.title
+      (data) => data.title !== selectedItem.title,
     );
 
     let newFileContent = "1\n";
     items.forEach((it) => {
       newFileContent += `${escapeData(it.title)} : ${escapeData(
-        it.description
+        it.description,
       )}\n`;
     });
 
@@ -90,20 +92,22 @@ export const useAssociationStore = create<DataState>((set, get) => ({
   },
 
   updateItem: (newItem) => {
-    if(!newItem.title) throw new Error("Missing title")
+    if (!newItem.title) throw new Error("Missing title");
     const selectedItem = get().selectedItem!;
     const items = get().items;
-    const itemIndex = items.findIndex((item) => item.title == selectedItem.title);
+    const itemIndex = items.findIndex(
+      (item) => item.title == selectedItem.title,
+    );
 
     if (!itemIndex) throw new Error("Item missing from main list");
 
     const newItems = [...items];
-    newItems[itemIndex] = newItem
+    newItems[itemIndex] = newItem;
 
     let newFileContent = "1\n";
     newItems.forEach((item) => {
-      const safeTitle = escapeData(item.title)
-      const safeDescription = escapeData(item.description)
+      const safeTitle = escapeData(item.title);
+      const safeDescription = escapeData(item.description);
       newFileContent += `${safeTitle} : ${safeDescription}\n`;
     });
 

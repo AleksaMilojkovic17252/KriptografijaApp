@@ -13,6 +13,7 @@ import { useRouter } from "expo-router";
 
 import { useAssociationStore } from "@/lib/dataStore";
 
+import { RichText } from "@/components/RichText";
 import { ThemedCardView } from "@/components/themed-components/themed-card-view";
 import { ThemedDivider } from "@/components/themed-components/themed-divider";
 import { ThemedSafeAreaView } from "@/components/themed-components/themed-safe-area-view";
@@ -48,7 +49,6 @@ export default function DetailsScreen() {
         alert(error.message);
       }
     }
-    
   };
 
   const revert = () => {
@@ -71,7 +71,7 @@ export default function DetailsScreen() {
             router.back();
           },
         },
-      ]
+      ],
     );
   };
 
@@ -79,12 +79,10 @@ export default function DetailsScreen() {
     <ThemedSafeAreaView>
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
-        keyboardVerticalOffset={Platform.OS === "ios" ? 90 : 0} 
+        keyboardVerticalOffset={Platform.OS === "ios" ? 90 : 0}
         style={{ flex: 1 }}
       >
-        <ScrollView 
-          contentContainerStyle={styles.content}
-        >
+        <ScrollView contentContainerStyle={styles.content}>
           <ThemedCardView style={styles.card}>
             <ThemedView style={styles.headerRow}>
               <Pressable
@@ -141,22 +139,22 @@ export default function DetailsScreen() {
                 textAlignVertical="top"
               />
             ) : (
-              <ThemedText style={styles.description}>{description}</ThemedText>
+              <RichText style={styles.description}>{description}</RichText>
             )}
           </ThemedCardView>
 
-        <Pressable
-          style={({ pressed }) => [
-            styles.footerDelete,
-            pressed && { opacity: 0.7 },
-          ]}
-          onPress={confirmDelete}
-        >
-          <Ionicons name="trash" size={18} color="#FF3B30" />
-          <ThemedText style={styles.footerDeleteText}>
-            Remove from list
-          </ThemedText>
-        </Pressable>
+          <Pressable
+            style={({ pressed }) => [
+              styles.footerDelete,
+              pressed && { opacity: 0.7 },
+            ]}
+            onPress={confirmDelete}
+          >
+            <Ionicons name="trash" size={18} color="#FF3B30" />
+            <ThemedText style={styles.footerDeleteText}>
+              Remove from list
+            </ThemedText>
+          </Pressable>
         </ScrollView>
       </KeyboardAvoidingView>
     </ThemedSafeAreaView>
@@ -199,7 +197,7 @@ const styles = StyleSheet.create({
     lineHeight: 26,
     opacity: 0.9,
   },
-    input: {
+  input: {
     fontSize: 16,
     padding: 16,
     borderRadius: 14,

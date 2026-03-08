@@ -3,6 +3,7 @@ import { Pressable, StyleSheet, useColorScheme, View } from "react-native";
 
 import { ThemedText } from "@/components/themed-components/themed-text";
 import { DataType } from "@/model/dataType";
+import { RichText } from "./RichText";
 import { ThemedCardView } from "./themed-components/themed-card-view";
 
 export default function DataCard(props: {
@@ -31,15 +32,19 @@ export default function DataCard(props: {
           >
             {props.item.title}
           </ThemedText>
-          <ThemedText
+          <RichText
             numberOfLines={2}
             ellipsizeMode="tail"
             style={[styles.itemDescription, { opacity: 0.6 }]}
           >
             {props.item.description}
-          </ThemedText>
+          </RichText>
         </View>
-        <Ionicons name="chevron-forward" size={18} color={isDark ? "#C7C7CC" : "#000000"} />
+        <Ionicons
+          name="chevron-forward"
+          size={18}
+          color={isDark ? "#C7C7CC" : "#000000"}
+        />
       </Pressable>
     </ThemedCardView>
   );

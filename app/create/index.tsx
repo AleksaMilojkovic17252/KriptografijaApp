@@ -11,6 +11,9 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 
+import { AddLinkButton } from "@/components/attachButtons/AddLinkButton";
+import { AttachImageButton } from "@/components/attachButtons/AttachImageButton";
+import { AttachSoundButton } from "@/components/attachButtons/AttachSoundButton";
 import { ThemedSafeAreaView } from "@/components/themed-components/themed-safe-area-view";
 import { ThemedText } from "@/components/themed-components/themed-text";
 import { ThemedTextInput } from "@/components/themed-components/themed-text-input";
@@ -25,6 +28,10 @@ export default function CreateItemScreen() {
   const router = useRouter();
 
   const descriptionRef = useRef<TextInput>(null);
+
+  const appendTag = (tag: string) => {
+    setDescription((prev) => (prev ? `${prev}${tag}` : tag));
+  };
 
   const handleSave = () => {
     if (!title.trim()) {
@@ -76,6 +83,15 @@ export default function CreateItemScreen() {
               numberOfLines={4}
               textAlignVertical="top"
             />
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={{ gap: 10, marginTop: 12 }}
+            >
+              <AttachImageButton onTagCreated={appendTag} />
+              <AttachSoundButton onTagCreated={appendTag} />
+              <AddLinkButton onTagCreated={appendTag} />
+            </ScrollView>
           </ThemedView>
 
           <Pressable

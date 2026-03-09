@@ -1,11 +1,7 @@
-import {
-  TextInput,
-  TextInputProps,
-  useColorScheme
-} from "react-native";
+import { forwardRef } from "react";
+import { TextInput, TextInputProps, useColorScheme } from "react-native";
 
 import { useThemeColor } from "@/hooks/use-theme-color";
-import { forwardRef } from "react";
 
 export type ThemedTextInputProps = TextInputProps & {
   lightColor?: string;
@@ -19,15 +15,15 @@ export const ThemedTextInput = forwardRef<TextInput, ThemedTextInputProps>(
 
     const backgroundColor = useThemeColor(
       { light: lightColor, dark: darkColor },
-      "textInputBackground"
+      "textInputBackground",
     );
     const color = useThemeColor(
       { light: lightColor, dark: darkColor },
-      "textInputColor"
+      "textInputColor",
     );
     const borderColor = useThemeColor(
       { light: lightColor, dark: darkColor },
-      "textInputBorderColor"
+      "textInputBorderColor",
     );
 
     const borderWidth = isDark ? 1 : 0;
@@ -44,5 +40,5 @@ export const ThemedTextInput = forwardRef<TextInput, ThemedTextInputProps>(
         {...otherProps}
       />
     );
-  }
+  },
 );

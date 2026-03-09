@@ -45,7 +45,6 @@ export const useAssociationStore = create<DataState>((set, get) => ({
         return null;
       })
       .filter((item): item is DataType => item !== null);
-    console.log("Parsed items:", items);
 
     set({ items });
   },
@@ -99,7 +98,7 @@ export const useAssociationStore = create<DataState>((set, get) => ({
       (item) => item.title == selectedItem.title,
     );
 
-    if (!itemIndex) throw new Error("Item missing from main list");
+    if (itemIndex == -1) throw new Error("Item missing from main list");
 
     const newItems = [...items];
     newItems[itemIndex] = newItem;

@@ -1,6 +1,7 @@
 import { View } from "react-native";
 
 import { useThemeColor } from "@/hooks/use-theme-color";
+
 import { ThemedViewProps as ThemedDividerProps } from "./themed-view";
 
 export function ThemedDivider({
@@ -11,7 +12,7 @@ export function ThemedDivider({
 }: ThemedDividerProps) {
   const backgroundColor = useThemeColor(
     { light: lightColor, dark: darkColor },
-    "divider"
+    "divider",
   );
 
   return (

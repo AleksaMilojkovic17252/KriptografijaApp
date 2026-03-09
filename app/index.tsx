@@ -1,8 +1,9 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { FlatList, Pressable, StyleSheet, useColorScheme } from "react-native";
 
-import { Ionicons } from "@expo/vector-icons";
+import { Entypo, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
+import Fuse from "fuse.js";
 
 import DataCard from "@/components/DataCard";
 import { useAssociationStore } from "@/lib/dataStore";
@@ -11,23 +12,27 @@ import { DataType } from "@/model/dataType";
 import { ThemedCardView } from "@/components/themed-components/themed-card-view";
 import { ThemedSafeAreaView } from "@/components/themed-components/themed-safe-area-view";
 import { ThemedTextInput } from "@/components/themed-components/themed-text-input";
-import Fuse from "fuse.js";
-
-const options = {
-  keys: ["title"],
-  threshold: 0.3,
-};
 
 export default function ListScreen() {
   const [search, setSearch] = useState("");
   const [filteredData, setFilteredData] = useState<DataType[]>([]);
+  const [searchTitle, setSearchTitle] = useState(true);
+
   const router = useRouter();
   const theme = useColorScheme();
+
   const isDark = theme === "dark";
 
   const { items, selectItem } = useAssociationStore();
 
-  const fuse = useMemo(() => new Fuse(items, options), [items]);
+  const fuse = useMemo(
+    () =>
+      new Fuse(items, {
+        keys: [searchTitle ? "title" : "description"],
+        threshold: 0.5,
+      }),
+    [items, searchTitle],
+  );
 
   useEffect(() => {
     if (search.trim() === "") {
@@ -37,35 +42,6 @@ export default function ListScreen() {
     const searchResults = fuse.search(search);
     setFilteredData(searchResults.map((result) => result.item));
   }, [search, fuse, setFilteredData, items]);
-
-  // useEffect(() => {
-  //   if (search.trim() === "") {
-  //     setFilteredData(items);
-  //     return;
-  //   }
-
-  //   const query = search.toLowerCase();
-  //   const threshold = 3;
-
-  //   const newData = items.filter((item) => {
-  //     const title = item.title.toLowerCase();
-  //     if (title.includes(query)) return true;
-
-  //     const words = title.split(" ");
-  //     return words.some((word) => {
-  //       const distance = getLevenshteinDistance(query, word);
-  //       return distance <= threshold;
-  //     });
-  //   });
-
-  //   newData.sort((a, b) => {
-  //     const distA = getLevenshteinDistance(query, a.title.toLowerCase());
-  //     const distB = getLevenshteinDistance(query, b.title.toLowerCase());
-  //     return distA - distB;
-  //   });
-
-  //   setFilteredData(newData);
-  // }, [search, items]);
 
   return (
     <ThemedSafeAreaView style={styles.container}>
@@ -82,15 +58,23 @@ export default function ListScreen() {
           value={search}
           onChangeText={setSearch}
         />
-        {search.length > 0 && (
-          <Pressable onPress={() => setSearch("")}>
-            <Ionicons
-              name="close-circle"
-              size={18}
-              color={isDark ? "#636366" : "#CCC"}
+        <Pressable
+          style={({ pressed }) => [
+            pressed && { opacity: 0.8, transform: [{ scale: 0.95 }] },
+          ]}
+          android_ripple={{ color: "#ffffff44", borderless: true }}
+          onPress={() => setSearchTitle((x) => !x)}
+        >
+          {searchTitle ? (
+            <MaterialIcons
+              name="title"
+              size={24}
+              color={isDark ? "white" : "black"}
             />
-          </Pressable>
-        )}
+          ) : (
+            <Entypo name="text" size={24} color={isDark ? "white" : "black"} />
+          )}
+        </Pressable>
       </ThemedCardView>
 
       <FlatList

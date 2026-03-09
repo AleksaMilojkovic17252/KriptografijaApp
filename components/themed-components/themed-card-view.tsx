@@ -2,6 +2,7 @@ import { View } from "react-native";
 
 import { useColorScheme } from "@/hooks/use-color-scheme.web";
 import { useThemeColor } from "@/hooks/use-theme-color";
+
 import { ThemedViewProps as ThemedCardViewProps } from "./themed-view";
 
 export function ThemedCardView({
@@ -14,11 +15,11 @@ export function ThemedCardView({
 
   const backgroundColor = useThemeColor(
     { light: lightColor, dark: darkColor },
-    "card"
+    "card",
   );
   const borderColor = useThemeColor(
     { light: lightColor, dark: darkColor },
-    "cardBorder"
+    "cardBorder",
   );
   const borderWidth = theme === "dark" ? 1 : 0;
 

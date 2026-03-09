@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   KeyboardAvoidingView,
   Platform,
@@ -9,7 +9,7 @@ import {
 } from "react-native";
 
 import { Ionicons } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useNavigation, useRouter } from "expo-router";
 
 import { AddLinkButton } from "@/components/attachButtons/AddLinkButton";
 import { AttachImageButton } from "@/components/attachButtons/AttachImageButton";
@@ -21,13 +21,34 @@ import { ThemedView } from "@/components/themed-components/themed-view";
 import { useAssociationStore } from "@/lib/dataStore";
 
 export default function CreateItemScreen() {
+  const { edit } = useLocalSearchParams<{ edit?: string }>();
+
+  const { addItem, updateItem, selectedItem } = useAssociationStore();
+  const router = useRouter();
+  const navigator = useNavigation();
+
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-
-  const { addItem } = useAssociationStore();
-  const router = useRouter();
+  const [isEditing, setIsEditing] = useState(false);
 
   const descriptionRef = useRef<TextInput>(null);
+
+  useEffect(() => {
+    if (isEditing && selectedItem) {
+      setTitle(selectedItem.title);
+      setDescription(selectedItem.description);
+    }
+  }, [isEditing, selectedItem]);
+
+  useEffect(() => {
+    navigator.setOptions({
+      title: isEditing ? "Edit Item" : "Create New Item",
+    });
+  }, [navigator, isEditing]);
+
+  useEffect(() => {
+    setIsEditing(!!edit);
+  }, [edit]);
 
   const appendTag = (tag: string) => {
     setDescription((prev) => (prev ? `${prev}${tag}` : tag));
@@ -39,7 +60,11 @@ export default function CreateItemScreen() {
       return;
     }
     try {
-      addItem({ title, description });
+      if (isEditing) {
+        updateItem({ title, description });
+      } else {
+        addItem({ title, description });
+      }
       router.back();
     } catch (error) {
       if (error instanceof Error) {
@@ -108,7 +133,9 @@ export default function CreateItemScreen() {
               color="white"
               style={{ marginRight: 8 }}
             />
-            <ThemedText style={styles.saveButtonText}>Save Item</ThemedText>
+            <ThemedText style={styles.saveButtonText}>
+              {isEditing ? "Update Item" : "Save Item"}
+            </ThemedText>
           </Pressable>
 
           <Pressable style={styles.cancelButton} onPress={() => router.back()}>
